@@ -1,0 +1,15 @@
+# BASE
+torch
+transformers
+datasets
+jupyter
+pandas
+
+# Pyspark
+pyspark
+
+# Ray
+ray
+
+# Celery
+celery[redis]
