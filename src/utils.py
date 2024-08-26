@@ -22,6 +22,7 @@ def get_model():
 
 def get_dataset():
     df = pd.read_csv(CSV_DATA)
+    df = df.dropna(subset=['text'])
     return list(df['text'].values)
 
 def get_num_cores():
