@@ -1,6 +1,6 @@
 import time
 import pandas as pd
-from utils import get_dataset, get_model
+from utils import get_dataset, get_model, get_num_cores
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import pandas_udf
 from pyspark.sql.types import StringType
@@ -23,8 +23,9 @@ def analyze_sentiment(text):
 udf_analyze_sentiment = spark.udf.register("analyze_sentiment", analyze_sentiment)
 
 # Get data to spark df
+num_cores = get_num_cores()
 texts = get_dataset()
-df = spark.createDataFrame(pd.DataFrame(texts, columns=["texts"]))
+df = spark.createDataFrame(pd.DataFrame(texts, columns=["texts"])).repartition(num_cores)
 
 # Cache to remove data loading to spark from timing as much as possible
 df.cache()
