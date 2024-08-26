@@ -15,6 +15,7 @@ services:
   #     context: .
   #     dockerfile: Dockerfile
   #   container_name: ray
+  #   shm_size: '20gb'
   #   volumes:
   #     - .:/app 
   #   command: python /app/src/ray_main.py
