@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  baseline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: baseline
+    volumes:
+      - .:/app 
+    command: python /app/src/baseline_main.py
+  
+  # ray:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: ray
+  #   volumes:
+  #     - .:/app 
+  #   command: python /app/src/ray_main.py
+  
+  # spark:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: spark
+  #   volumes:
+  #     - .:/app 
+  #   command: python /app/src/spark_main.py
+
+  # celery:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: celery
+  #   depends_on:
+  #     - redis-celery
+  #   volumes:
+  #     - .:/app 
+  #   command: celery -A tasks worker --loglevel=INFO --concurrency=2
+  
+  # redis-celery:
+  #   image: redis
+  #   container_name: redis_celery
+  #   port: 
+  #     - 6379:6379
