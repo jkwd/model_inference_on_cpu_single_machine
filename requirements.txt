@@ -1,15 +1,14 @@
 # BASE
 torch
 transformers
-datasets
 jupyter
 pandas
 
-# Pyspark
-pyspark
+# # Pyspark
+# pyspark
 
-# Ray
-ray
+# # Ray
+# ray
 
-# Celery
-celery[redis]
+# # Celery
+# celery[redis]

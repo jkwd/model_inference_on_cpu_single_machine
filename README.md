@@ -27,3 +27,9 @@ To run celery, it requires more effort. It requires redis and celery to be start
 2. In termial 1, activate `.venv` and run `celery -A tasks worker --loglevel=INFO --concurrency=2`. This will start up celery.
 3. In terminal 2
    1. Activate `.venv` and run `python3 celery_main.py`
+
+# Results
+Baseline: 696.1332404613495
+Ray: 601.8566570281982
+
+If task is simple then Ray will be an overhead

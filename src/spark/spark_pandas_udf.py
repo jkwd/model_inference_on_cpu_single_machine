@@ -1,6 +1,6 @@
 import time
 import pandas as pd
-from utils import get_dataset, get_model, get_num_cores
+from common.utils import get_dataset, get_model, get_num_cores
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import pandas_udf
 from pyspark.sql.types import StringType

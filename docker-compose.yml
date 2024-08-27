@@ -1,24 +1,20 @@
-version: '3.8'
-
 services:
-  baseline:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: baseline
-    volumes:
-      - .:/app 
-    command: python /app/src/baseline_main.py
-  
-  # ray:
+  # baseline:
   #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: ray
-  #   shm_size: '20gb'
+  #     dockerfile: Dockerfile.baseline
+  #   container_name: baseline
   #   volumes:
   #     - .:/app 
-  #   command: python /app/src/ray_main.py
+  #   command: python /app/src/main_baseline.py
+  
+  ray:
+    build:
+      dockerfile: Dockerfile.ray
+    container_name: ray
+    shm_size: '4gb'
+    volumes:
+      - .:/app
+    command: python /app/src/main_ray.py
   
   # spark:
   #   build:
