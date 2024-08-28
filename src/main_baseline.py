@@ -1,5 +1,5 @@
 from baseline import run_baseline
+from common.constants import Experiment
 
-
-run_baseline.run_translate()
-# run_baseline.run_sentiment()
+# run_baseline.run(Experiment('translation'))
+run_baseline.run(Experiment('sentiment'))
