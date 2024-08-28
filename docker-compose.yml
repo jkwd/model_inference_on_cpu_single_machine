@@ -5,7 +5,8 @@ services:
   #   container_name: baseline
   #   volumes:
   #     - .:/app 
-  #   command: python /app/src/main_baseline.py
+  #   command: python /app/src/main_baseline.py --run translation
+  #   # command: python /app/src/main_baseline.py --run sentiment
   
   ray:
     build:
@@ -14,7 +15,8 @@ services:
     shm_size: '4gb'
     volumes:
       - .:/app
-    command: python /app/src/main_ray.py
+    command: python /app/src/main_ray.py --run translation
+    # command: python /app/src/main_ray.py --run sentiment
   
   # spark:
   #   build:
