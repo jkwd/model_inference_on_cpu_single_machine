@@ -7,7 +7,7 @@ def run(experiment:Experiment):
     full_start_time = time.time()
     
     texts = get_dataset(experiment=experiment)
-    pipe = get_model(experiment=experiment) # To predownload model
+    pipe = get_model(experiment=experiment) # To predownload model to cache
     
     start_time = time.time()
     # Dispatch tasks to Celery workers
