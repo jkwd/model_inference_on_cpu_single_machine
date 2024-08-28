@@ -4,6 +4,13 @@ from enum import Enum
 class Experiment(Enum):
     TRANSLATION = 'translation'
     SENTIMENT = 'sentiment'
+    
+    def to_dict(self):
+        return {'name': self.name}
+
+    @staticmethod
+    def from_dict(data):
+        return Experiment[data['name']]
 
 # Model
 SENTIMENT_MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"

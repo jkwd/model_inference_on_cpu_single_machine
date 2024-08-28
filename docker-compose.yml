@@ -8,38 +8,48 @@ services:
   #   command: python /app/src/main_baseline.py --run translation
   #   # command: python /app/src/main_baseline.py --run sentiment
   
-  ray:
-    build:
-      dockerfile: Dockerfile.ray
-    container_name: ray
-    shm_size: '4gb'
-    volumes:
-      - .:/app
-    command: python /app/src/main_ray.py --run translation
-    # command: python /app/src/main_ray.py --run sentiment
+  # ray:
+  #   build:
+  #     dockerfile: Dockerfile.ray
+  #   container_name: ray
+  #   shm_size: '4gb'
+  #   volumes:
+  #     - .:/app
+  #   command: python /app/src/main_ray.py --run translation
+  #   # command: python /app/src/main_ray.py --run sentiment
   
   # spark:
   #   build:
   #     context: .
-  #     dockerfile: Dockerfile
+  #     dockerfile: Dockerfile.pyspark
   #   container_name: spark
   #   volumes:
-  #     - .:/app 
-  #   command: python /app/src/spark_main.py
+  #     - .:/app
+  #   ports:
+  #     - "8080:8080"
+  #     - "4040:4040"
+  #   environment:
+  #     - SPARK_MASTER_HOST=localhost
+  #     - PYSPARK_PYTHON=python3
+  #   command: spark-submit /app/src/main_spark.py --run translation
 
-  # celery:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: celery
-  #   depends_on:
-  #     - redis-celery
-  #   volumes:
-  #     - .:/app 
-  #   command: celery -A tasks worker --loglevel=INFO --concurrency=2
+  celery:
+    build:
+      dockerfile: Dockerfile.celery
+    container_name: celery
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app 
+    command: celery -A src.celery_eval.tasks worker --loglevel=INFO --concurrency=2
   
-  # redis-celery:
-  #   image: redis
-  #   container_name: redis_celery
-  #   port: 
-  #     - 6379:6379
+  redis:
+    image: redis
+    container_name: redis_celery
+    expose:
+      - "6379"
+    ports: 
+      - "6379:6379"
