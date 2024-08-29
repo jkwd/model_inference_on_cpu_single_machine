@@ -6,16 +6,19 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import pandas_udf
 
 def run(experiment: Experiment):
+    full_start_time = time.time()
+    
     # Initialize a Spark session
     spark = SparkSession.builder.appName("SentimentAnalysis").getOrCreate()
+    
+    pipe, = get_model(experiment=experiment)
 
     # Define UDF
     # https://docs.databricks.com/en/machine-learning/train-model/huggingface/model-inference-nlp.html
     @pandas_udf('string')
-    def sentiment_udf(texts: pd.Series) -> pd.Series:
-        pipe, tokenizer, model = get_model(experiment=experiment)
+    def predict_udf(texts: pd.Series) -> pd.Series:
         if experiment is Experiment.TRANSLATION:
-            pass
+            outs = [out['translation_text'] for out in pipe(texts.to_list(), batch_size=1)]
         elif experiment is Experiment.SENTIMENT:
             outs = [out['label'] for out in pipe(texts.to_list(), batch_size=1)]
         return pd.Series(outs)
@@ -28,21 +31,18 @@ def run(experiment: Experiment):
     # Cache to remove data loading to spark from timing as much as possible
     df.cache()
 
-    # Get Sentiment via UDF
-    # noop to force execution of UDF without writing to file
-    start_time = time.time()
-    sentiment_df = df.withColumn("sentiment", udf_analyze_sentiment(df["texts"]))
-    sentiment_df.write.format("noop").mode("overwrite").save()
-    end_time = time.time()
-    time_diff = end_time - start_time
-    print(f"Time taken for UDF: {time_diff}")
-
-
     # Get Sentiment via Pandas UDF
     # noop to force execution of UDF without writing to file
     start_time = time.time()
-    sentiment_df_2 = df.withColumn("sentiment", sentiment_udf(df.texts).alias('translation'))
-    sentiment_df_2.write.format("noop").mode("overwrite").save()
+    result_df = df.select(df.texts, predict_udf(df.texts).alias('predict'))
+    result_df.write.format("noop").mode("overwrite").save()
     end_time = time.time()
+    
+    full_end_time = time.time()
+    
     time_diff = end_time - start_time
-    print(f"Time taken for Pandas UDF: {time_diff}")
+    full_time_diff = full_end_time - full_start_time
+    print(f"Model inference time taken: {time_diff}")
+    print(f"Full time taken: {full_time_diff}")
+    
+    spark.stop()

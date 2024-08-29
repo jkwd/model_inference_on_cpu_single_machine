@@ -18,4 +18,5 @@ def run(experiment: Experiment):
     full_time_diff = full_end_time - full_start_time
     print(f"Model inference time taken: {time_diff}")
     print(f"Full time taken: {full_time_diff}")
-    print(outs)
+    
+    return time_diff, full_time_diff

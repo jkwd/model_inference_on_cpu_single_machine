@@ -31,3 +31,5 @@ def run(experiment: Experiment):
     print(f"Full time taken: {full_time_diff}")
     
     ray.shutdown()
+    
+    return time_diff, full_time_diff

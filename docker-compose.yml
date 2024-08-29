@@ -1,22 +1,20 @@
 services:
   # baseline:
   #   build:
-  #     dockerfile: Dockerfile.baseline
+  #     context: ./src/baseline
   #   container_name: baseline
   #   volumes:
-  #     - .:/app 
-  #   command: python /app/src/main_baseline.py --run translation
-  #   # command: python /app/src/main_baseline.py --run sentiment
+  #     - .:/app
+  #   command: python /app/src/main_baseline.py
   
   # ray:
   #   build:
-  #     dockerfile: Dockerfile.ray
+  #     context: ./src/ray_eval
   #   container_name: ray
   #   shm_size: '4gb'
   #   volumes:
   #     - .:/app
-  #   command: python /app/src/main_ray.py --run translation
-  #   # command: python /app/src/main_ray.py --run sentiment
+  #   command: python /app/src/main_ray.py
   
   # spark:
   #   build:
@@ -35,7 +33,7 @@ services:
 
   celery:
     build:
-      dockerfile: Dockerfile.celery
+      context: ./src/celery_eval
     container_name: celery
     depends_on:
       - redis
