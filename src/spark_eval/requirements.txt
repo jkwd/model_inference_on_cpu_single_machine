@@ -6,6 +6,4 @@ transformers
 sentencepiece
 pandas
 pyspark
-# pipenv
-# findspark
-# py4j
+pyarrow

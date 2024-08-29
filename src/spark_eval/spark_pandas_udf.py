@@ -11,7 +11,7 @@ def run(experiment: Experiment):
     # Initialize a Spark session
     spark = SparkSession.builder.appName("SentimentAnalysis").getOrCreate()
     
-    pipe, = get_model(experiment=experiment)
+    pipe = get_model(experiment=experiment)
 
     # Define UDF
     # https://docs.databricks.com/en/machine-learning/train-model/huggingface/model-inference-nlp.html
@@ -25,7 +25,7 @@ def run(experiment: Experiment):
 
     # Get data to spark df
     num_cores = get_num_cores()
-    texts = get_dataset()
+    texts = get_dataset(experiment=experiment)
     df = spark.createDataFrame(pd.DataFrame(texts, columns=["texts"])).repartition(num_cores)
 
     # Cache to remove data loading to spark from timing as much as possible
@@ -46,3 +46,5 @@ def run(experiment: Experiment):
     print(f"Full time taken: {full_time_diff}")
     
     spark.stop()
+    
+    return time_diff, full_time_diff
